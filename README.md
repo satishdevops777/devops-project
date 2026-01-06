@@ -288,3 +288,59 @@ With access_log off; (Correct Way)
   ```
   systemctl restart nginx
   ```
+
+
+## 2. MongoDB
+
+-  Developer has chosen the database MongoDB. Hence, we are trying to install it up and configure it.
+-  Versions of the DB Software you will get context from the developer, Meaning we need to check with developer. Developer has shared the version information as MongoDB-4.x
+-  Setup the MongoDB repo file
+   /etc/yum.repos.d/mongo.repo
+    ```mongodb
+    [mongodb-org-4.2]  #This is the repository ID & Must be unique on the system
+    name=MongoDB Repository #A human-readable name
+    baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.2/x86_64/
+    gpgcheck=0
+    enabled=1
+    ```
+    | Part                       | Meaning                     |
+    | -------------------------- | --------------------------- |
+    | `https://repo.mongodb.org` | Official MongoDB repository |
+    | `/yum/redhat/`             | For RHEL-based OS           |
+    | `$releasever`              | OS version (auto-detected)  |
+    | `mongodb-org/4.2/`         | MongoDB version             |
+    | `x86_64/`                  | 64-bit architecture         |
+
+  - gpgcheck=0
+   - What is GPG check?
+     - Verifies package authenticity
+     - Ensures packages are not tampered
+  - enabled=1
+    - #Repository is ACTIVE
+       - enabled=1 → works ✅
+       - enabled=0 → repo ignored ❌
+    
+- Install MongoDB :
+  ```
+    dnf install mongodb-org -y
+  ```
+- Start & Enable MongoDB Service
+  ```
+  systemctl enable mongod 
+  systemctl start mongod
+  ```
+  ⚠️ Common Production Issues
+    | Issue               | Cause               |
+    | ------------------- | ------------------- |
+    | 404 error           | Wrong `$releasever` |
+    | Repo unreachable    | Network / proxy     |
+    | Install fails       | OS version mismatch |
+    | Security audit fail | `gpgcheck=0`        |
+
+  
+  - Usually MongoDB opens the port only to localhost(127.0.0.1), meaning this service can be accessed by the application that is hosted on this server only. However, we need to access this service to be accessed by   another server, So we need to change the config accordingly.
+  - Update listen address from ```127.0.0.1 to 0.0.0.0``` in ```/etc/mongod.conf```
+  - Restart the service to make the changes effected.
+    ```shell
+    systemctl restart mongod
+    ```
