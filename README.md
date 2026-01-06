@@ -71,6 +71,7 @@ unzip /tmp/frontend.zip
 ```
 vim /etc/nginx/default.d/roboshop.conf #Create Nginx Reverse Proxy Configuration.
 ```
+
 1️⃣ proxy_http_version 1.1;
     - proxy_http_version 1.1; #Forces Nginx to use HTTP/1.1 when talking to backend services.
     - WHY THIS IS IMPORTANT
@@ -168,8 +169,7 @@ vim /etc/nginx/default.d/roboshop.conf #Create Nginx Reverse Proxy Configuration
   location /api/payment/ { proxy_pass http://localhost:8080/; }
   ```
   
-  4️⃣ /health – Health Check Endpoint
-
+4️⃣ /health – Health Check Endpoint
   - creates a health and monitoring endpoint in Nginx
   ```nginx
   location /health {
@@ -177,7 +177,6 @@ vim /etc/nginx/default.d/roboshop.conf #Create Nginx Reverse Proxy Configuration
     access_log off;
   }
   ```
-
 🧠 What is a Health Endpoint?
 - A health endpoint is a URL that:
   - Returns basic service status
